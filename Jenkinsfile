@@ -5,8 +5,8 @@ pipeline {
         repoUri = "904233105350.dkr.ecr.ap-south-1.amazonaws.com/dockerized_springboot"
         repoRegistryUrl = "https://904233105350.dkr.ecr.ap-south-1.amazonaws.com"
         registryCreds = 'ecr:ap-south-1:awscreds'
-        cluster = "ECSandJenkinsCluster"
-        service = "ECS-EcsAgentTemplate-service-s9o4i53b"
+        cluster = "ECSForJenkins"
+        service = "ECSForJenkinsSvc"
         region = 'ap-south-1'
     }
 
