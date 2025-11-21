@@ -5,8 +5,8 @@ pipeline {
         repoUri = "904233105350.dkr.ecr.ap-south-1.amazonaws.com/dockerized_springboot"
         repoRegistryUrl = "https://904233105350.dkr.ecr.ap-south-1.amazonaws.com"
         registryCreds = 'ecr:ap-south-1:awscreds'
-        cluster = "webform"
-        service = "webform-svc"
+        cluster = "ECSandJenkinsCluster"
+        service = "ECS-EcsAgentTemplate-service-s9o4i53b"
         region = 'ap-south-1'
     }
 
@@ -59,7 +59,7 @@ pipeline {
             }
         }
        
-        /*stage('Deploy to ECS') {
+        stage('Deploy to ECS') {
             agent {
                 docker {
                     image 'amazon/aws-cli:latest'  // Use a pre-built AWS CLI Docker image for ECS deployment
@@ -74,6 +74,6 @@ pipeline {
                     }
                 }
             }
-        }*/
+        }
     }
 }
