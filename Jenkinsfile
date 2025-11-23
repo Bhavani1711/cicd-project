@@ -15,16 +15,17 @@ pipeline {
 	
  
     stages{
-        stage('Build Maven'){
+        
+    }
+
+
+    stages {
+	    stage('Build Maven'){
             steps{
                 checkout([$class: 'GitSCM', branches: [[name: '*/feature']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Bhavani1711/cicd-project.git']]])
                 sh 'mvn clean install'
             }
         }        
-    }
-
-
-    stages {
         stage('Docker Test') {
             agent {
                 docker {
