@@ -16,7 +16,7 @@ pipeline {
             steps{               
 				git branch: 'feature',
                 credentialsId: 'GitSCM',
-                url: 'https://github.com/Bhavani1711/cicd-project.git''
+                url: 'https://github.com/Bhavani1711/cicd-project.git'
                 sh 'mvn clean install'
             }
         }        
