@@ -9,6 +9,19 @@ pipeline {
         service = "deploy-dockerized-spring-boot-service-tr13h5pp"
         region = 'ap-south-1'
     }
+	
+    tools{
+        maven 'maven_3_5_0'
+    }
+    stages{
+        stage('Build Maven'){
+            steps{
+                checkout([$class: 'GitSCM', branches: [[name: '*/feature']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Bhavani1711/cicd-project.git']]])
+                sh 'mvn clean install'
+            }
+        }        
+    }
+
 
     stages {
         stage('Docker Test') {
