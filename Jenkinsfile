@@ -1,8 +1,6 @@
 pipeline {
-    agent any  // No global agent, each stage will define its own
-	tools{
-        maven 'maven_3_5_0'
-    }
+    agent none  // No global agent, each stage will define its own
+	
     environment {
         DOCKER_CONFIG = '/tmp/.docker'  // Set to a directory with write access
         repoUri = "904233105350.dkr.ecr.ap-south-1.amazonaws.com/dockerized_springboot"
@@ -13,12 +11,6 @@ pipeline {
         region = 'ap-south-1'
     }
 	
- 
-    stages{
-        
-    }
-
-
     stages {
 	    stage('Build Maven'){
             steps{
