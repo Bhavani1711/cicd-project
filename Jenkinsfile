@@ -12,12 +12,11 @@ pipeline {
     }
 	
     stages {
-	    stage('Build Maven'){
+	    stage('Check out'){
             steps{               
 				git branch: 'feature',
                 credentialsId: 'GitSCM',
-                url: 'https://github.com/Bhavani1711/cicd-project.git'
-                sh 'mvn clean install'
+                url: 'https://github.com/Bhavani1711/cicd-project.git'                
             }
         }        
         stage('Docker Test') {
