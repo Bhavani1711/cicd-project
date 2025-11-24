@@ -252,7 +252,7 @@ pipeline {
 			   script{
 					echo "Deploying application to ${TARGET_EC2_IP}..."
 					withAWS(credentials: 'awscreds', region: "${AWS_REGION}") {
-					  aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO_URL}
+					  sh 'aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO_URL}'
 					  
 					  sh'docker stop my-web-app || true'
 					  sh'docker rm my-web-app || true'
