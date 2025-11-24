@@ -120,9 +120,10 @@ pipeline {
 	
 	
 	stages {
-        stage('1. Display Path') {
+        stage('2. Build Application') {		    
             steps {
-                sh "node --version"              
+                echo 'Installing Node.js dependencies...'
+                sh 'npm install'
             }
         }
 	}
