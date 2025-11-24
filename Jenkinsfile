@@ -111,13 +111,18 @@
 }*/
 
 pipeline {
-    agent any
+    
+	agent{
+	  docker{
+	       image 'node:24.11.1-alpine3.22'
+	  }
+	}
 	
 	
 	stages {
         stage('1. Display Path') {
             steps {
-                sh "nodejs --version"              
+                sh "node --version"              
             }
         }
 	}
