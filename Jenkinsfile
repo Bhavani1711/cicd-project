@@ -243,7 +243,20 @@ pipeline {
                     }
                 }
             }
-        }          
+        } 
+    stage('Get ECR Login Token') {
+            steps {
+                script {
+                    // Get ECR login password from Jenkins (which has AWS CLI)
+                    withAWS(credentials: 'awscreds', region: AWS_REGION) {
+                        env.ECR_PASSWORD = sh(
+                            script: "aws ecr get-login-password --region ${AWS_REGION}",
+                            returnStdout: true
+                        ).trim()
+                    }
+                }
+            }
+        }		
         
 	stage('Deploy to EC2') {
             steps {
