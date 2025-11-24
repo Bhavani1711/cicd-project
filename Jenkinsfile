@@ -3,11 +3,9 @@ pipeline {
     environment {
         AWS_ACCOUNT_ID="904233105350"
         AWS_DEFAULT_REGION="ap-south-1"
-        IMAGE_REPO_NAME="asb/dockerized-my-app"
-		IMAGE_NAME = 'my-app'
+        IMAGE_REPO_NAME="asb/dockerized-my-app"		
         IMAGE_TAG="latest"
-		IMAGE_LATEST = "${ECR_REPO_URL}/${IMAGE_NAME}:latest"
-        IMAGE_VERSIONED = "${ECR_REPO_URL}/${IMAGE_NAME}:${IMAGE_TAG}"
+		IMAGE_LATEST = "${ECR_REPO_URL}/${IMAGE_REPO_NAME}:${IMAGE_TAG}"        
         ECR_REPO_URL = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
 		CONTAINER_NAME = 'my-web-app'
         HOST_PORT = '80'
