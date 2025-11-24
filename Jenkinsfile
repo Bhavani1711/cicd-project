@@ -45,8 +45,10 @@
 		    
             steps {
                 echo "Building Docker image: ${IMAGE_NAME}"
-                sh "docker build -t ${IMAGE_NAME} ."
-                sh "docker tag ${IMAGE_NAME} ${IMAGE_NAME_LATEST}"
+				sh 'mkdir -p /tmp/.docker'  
+				dockerImage = docker.build(repoUri + ":$IMAGE_NAME")
+                #sh "docker build -t ${IMAGE_NAME} ."
+                #sh "docker tag ${IMAGE_NAME} ${IMAGE_NAME_LATEST}"
             }
         }
 
@@ -163,8 +165,8 @@ pipeline {
             }
             steps {
                 echo "Building Docker image: ${IMAGE_NAME}"
-                sh "docker build -t ${IMAGE_NAME} ."
-                sh "docker tag ${IMAGE_NAME} ${IMAGE_NAME_LATEST}"
+				sh 'mkdir -p /tmp/.docker'  
+				dockerImage = docker.build(repoUri + ":$IMAGE_NAME")
             }
         }
 	}
