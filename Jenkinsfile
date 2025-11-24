@@ -1,4 +1,4 @@
-pipeline {
+/*pipeline {
     agent any
 
     // These variables will be used in the stages
@@ -113,4 +113,11 @@ pipeline {
             echo 'Pipeline Failed.'
         }
     }
+}*/
+pipeline {
+agent any
+	environment {
+	NODE_HOME = tool 'NodeJS' // Name of NodeJS installation
+	PATH = "${NODE_HOME}/bin:${env.PATH}"
+	}
 }
