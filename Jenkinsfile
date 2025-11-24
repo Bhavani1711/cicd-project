@@ -111,6 +111,21 @@
 }*/
 
 pipeline {
+
+     environment {
+        // ---!!! YOU MUST EDIT THESE VALUES !!!---
+        AWS_ACCOUNT_ID    = "904233105350"       // Find this in your AWS console
+        AWS_REGION        = "ap-south-1"                 // The region for your ECR/EC2
+        ECR_REPO_NAME     = "asb/dockerized-my-app"                // The ECR repo name you will create
+        TARGET_EC2_IP     = "15.206.224.9" // The IP of your deployment server
+        TARGET_EC2_USER   = "ubuntu"                    // We are using an Ubuntu server
+        // ---!!! -----------------------------!!!---
+
+        // These are calculated automatically
+        ECR_REPO_URL      = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+        IMAGE_NAME        = "${ECR_REPO_NAME}:${env.BUILD_NUMBER}"
+        IMAGE_NAME_LATEST = "${ECR_REPO_NAME}:latest"
+    }
     
 	agent{
 	  docker{
@@ -121,7 +136,7 @@ pipeline {
 	
 	
 	stages {
-        stage('2. Build Application') {		    
+        stage('1.Installing dependencies') {		    
             steps {
                 sh '''
                      #set -x  # Print each command
@@ -132,10 +147,17 @@ pipeline {
                  '''
             }
         }
-		stage('3. Run Tests') {
+		stage('2. Run Tests') {
             steps {
                 echo 'Running tests...'
                 sh 'npm test'
+            }
+        }
+		stage('3. Build Docker Image') {
+            steps {
+                echo "Building Docker image: ${IMAGE_NAME}"
+                sh "docker build -t ${IMAGE_NAME} ."
+                sh "docker tag ${IMAGE_NAME} ${IMAGE_NAME_LATEST}"
             }
         }
 	}
