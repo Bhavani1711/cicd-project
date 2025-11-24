@@ -187,13 +187,13 @@ pipeline {
         repoUri = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME}"
         repoRegistryUrl = "https://${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
         registryCreds = 'ecr:ap-south-1:awscreds'
-		ECR_REPO_URL      = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
-        IMAGE_NAME        = "${ECR_REPO_NAME}:${env.BUILD_NUMBER}"
-        IMAGE_NAME_LATEST = "${ECR_REPO_NAME}:latest"   
-        CONTAINER_NAME = 'my-web-app'
-        HOST_PORT = '80'
-        CONTAINER_PORT = '9090'	
-        SSH_CREDENTIALS_ID='ec2-ssh-key'		
+		ECR_REPO_URL       = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+        IMAGE_NAME         = "${ECR_REPO_NAME}:${env.BUILD_NUMBER}"
+        IMAGE_LATEST       = "${ECR_REPO_NAME}:latest"   
+        CONTAINER_NAME     = 'my-web-app'
+        HOST_PORT          = '80'
+        CONTAINER_PORT     = '9090'	
+        SSH_CREDENTIALS_ID ='ec2-ssh-key'		
     }
 	
     stages {	   
