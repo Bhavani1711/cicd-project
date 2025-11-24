@@ -125,7 +125,7 @@ pipeline {
 	stages {
         stage('1. Display Path') {
             steps {
-                echo $PATH                
+                echo "$PATH"                
             }
         }
 	}
