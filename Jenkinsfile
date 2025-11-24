@@ -192,7 +192,8 @@ pipeline {
         IMAGE_NAME_LATEST = "${ECR_REPO_NAME}:latest"   
         CONTAINER_NAME = 'my-web-app'
         HOST_PORT = '80'
-        CONTAINER_PORT = '9090'		
+        CONTAINER_PORT = '9090'	
+        SSH_CREDENTIALS_ID='ec2-ssh-key'		
     }
 	
     stages {	   
@@ -242,8 +243,7 @@ pipeline {
                     }
                 }
             }
-        } 
-         
+        }          
         
 	stage('Deploy to EC2') {
             steps {
@@ -295,6 +295,7 @@ pipeline {
                     }
                 }
             }       
-   }      
+       }  
+    }	   
     
 }
