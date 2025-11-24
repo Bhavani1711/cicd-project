@@ -189,7 +189,10 @@ pipeline {
         registryCreds = 'ecr:ap-south-1:awscreds'
 		ECR_REPO_URL      = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
         IMAGE_NAME        = "${ECR_REPO_NAME}:${env.BUILD_NUMBER}"
-        IMAGE_NAME_LATEST = "${ECR_REPO_NAME}:latest"      
+        IMAGE_NAME_LATEST = "${ECR_REPO_NAME}:latest"   
+        CONTAINER_NAME = 'my-web-app'
+        HOST_PORT = '80'
+        CONTAINER_PORT = '9090'		
     }
 	
     stages {	   
@@ -241,29 +244,57 @@ pipeline {
             }
         } 
          
-         stage('6. Deploy to EC2') {
-		    agent {
-                docker {
-                    image 'docker:latest'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'  // Mount Docker socket
-                }
-            }
+        
+	stage('Deploy to EC2') {
             steps {
-			   script{
-					echo "Deploying application to ${TARGET_EC2_IP}..."
-					docker.withRegistry(repoRegistryUrl, registryCreds) {
-					  
-					  sh'docker stop my-web-app || true'
-					  sh'docker rm my-web-app || true'
-					 
-					  sh 'docker pull ${ECR_REPO_URL}/${IMAGE_NAME_LATEST}'
-					  
-					  sh 'docker run -d -p 80:9090 --name my-web-app ${ECR_REPO_URL}/${IMAGE_NAME_LATEST}'                        
-                    }					
-				}
-			 }
-          }
-        }		 
-       
+                script {
+                    // Use SSH credentials from Jenkins
+                    sshagent(credentials: [SSH_CREDENTIALS_ID]) {
+                        sh """
+                            ssh -o StrictHostKeyChecking=no ${TARGET_EC2_USER}@${TARGET_EC2_IP} '
+                                set -e
+                                
+                                echo "========================================="
+                                echo "Step 1: AWS ECR Login"
+                                echo "========================================="
+                                aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO_URL}
+                                
+                                echo "========================================="
+                                echo "Step 2: Stop and Remove Old Container"
+                                echo "========================================="
+                                docker stop ${CONTAINER_NAME} 2>/dev/null || true
+                                docker rm ${CONTAINER_NAME} 2>/dev/null || true
+                                
+                                echo "========================================="
+                                echo "Step 3: Pull Latest Image from ECR"
+                                echo "========================================="
+                                docker pull ${IMAGE_LATEST}
+                                
+                                echo "========================================="
+                                echo "Step 4: Run New Container"
+                                echo "========================================="
+                                docker run -d \
+                                    --name ${CONTAINER_NAME} \
+                                    -p ${HOST_PORT}:${CONTAINER_PORT} \
+                                    --restart unless-stopped \
+                                    ${IMAGE_LATEST}
+                                
+                                echo "========================================="
+                                echo "Step 5: Verify Deployment"
+                                echo "========================================="
+                                docker ps | grep ${CONTAINER_NAME}
+                                
+                                echo "========================================="
+                                echo "Step 6: Cleanup Old Images"
+                                echo "========================================="
+                                docker image prune -f
+                                
+                                echo "Deployment completed successfully!"
+                            '
+                        """
+                    }
+                }
+            }       
+   }      
     
 }
