@@ -4,13 +4,13 @@ pipeline {
         AWS_ACCOUNT_ID="904233105350"
         AWS_DEFAULT_REGION="ap-south-1"
         IMAGE_REPO_NAME="asb/dockerized-my-app"		
-        IMAGE_TAG="latest"
-		IMAGE_LATEST = "${ECR_REPO_URL}/${IMAGE_REPO_NAME}:${IMAGE_TAG}"        
+        IMAGE_TAG="latest"		        
         ECR_REPO_URL = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
+		IMAGE_LATEST = "${ECR_REPO_URL}:${IMAGE_TAG}"
 		CONTAINER_NAME = 'my-web-app'
         HOST_PORT = '80'
         CONTAINER_PORT = '9090'
-		EC2_HOST = '15.206.224.9'  // Your EC2 private/public IP
+		EC2_HOST = '15.206.224.9' 
         EC2_USER = 'ubuntu'  
 		SSH_CREDENTIALS_ID = 'ec2-ssh-key'
 	}
