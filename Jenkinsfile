@@ -111,7 +111,7 @@
             echo 'Pipeline Failed.'
         }
     }
-}*/
+}
 
 pipeline {
 
@@ -166,10 +166,79 @@ pipeline {
             steps {                
 				script {
                     echo 'Building Docker Image from Dockerfile...'
-                    sh 'mkdir -p /tmp/.docker'  // Ensure the directory exists
+                    sh 'mkdir -p /tmp/.docker'  
                     dockerImage = docker.build(repoUri + ":$IMAGE_NAME")
                 }
             }
         }
 	}
+}*/
+
+pipeline {
+    agent any  // No global agent, each stage will define its own
+	
+    environment {
+        DOCKER_CONFIG = '/tmp/.docker'  // Set to a directory with write access
+		AWS_ACCOUNT_ID    = "904233105350"
+		AWS_ACCOUNT_ID    = "904233105350"       // Find this in your AWS console
+        AWS_REGION        = "ap-south-1"                 // The region for your ECR/EC2
+        ECR_REPO_NAME     = "asb/dockerized-my-app"                // The ECR repo name you will create
+        TARGET_EC2_IP     = "15.206.224.9" // The IP of your deployment server
+        TARGET_EC2_USER   = "ubuntu"    
+        repoUri = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME}"
+        repoRegistryUrl = "https://${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+        registryCreds = 'ecr:ap-south-1:awscreds'
+       
+    }
+	
+    stages {	   
+        stage('Docker Test') {
+            agent {
+                docker {
+                    image 'docker:latest'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'  // Mount Docker socket
+                }
+            }
+            steps {
+                script {
+                    sh 'docker ps'
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            agent {
+                docker {
+                    image 'docker:latest'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'  // Mount Docker socket
+                }
+            }
+            steps {
+                script {
+                    echo 'Building Docker Image from Dockerfile...'
+                    sh 'mkdir -p /tmp/.docker'  // Ensure the directory exists
+                    dockerImage = docker.build(repoUri + ":$BUILD_NUMBER")
+                }
+            }
+        }
+
+        stage('Push Docker Image to ECR') {
+            agent {
+                docker {
+                    image 'docker:latest'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'  // Mount Docker socket
+                }
+            }
+            steps {
+                script {
+                    echo "Pushing Docker Image to ECR..."
+                    docker.withRegistry(repoRegistryUrl, registryCreds) {
+                        dockerImage.push("$BUILD_NUMBER")
+                        dockerImage.push('latest')
+                    }
+                }
+            }
+        }      
+       
+    }
 }
