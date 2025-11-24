@@ -8,7 +8,7 @@ pipeline {
         ECR_REPO_URL = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
 		IMAGE_LATEST = "${ECR_REPO_URL}:${IMAGE_TAG}"
 		CONTAINER_NAME = 'my-web-app'
-        HOST_PORT = '80'
+        HOST_PORT = '9090'
         CONTAINER_PORT = '9090'
 		EC2_HOST = '15.206.224.9' 
         EC2_USER = 'ubuntu'  
