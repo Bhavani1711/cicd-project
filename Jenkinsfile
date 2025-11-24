@@ -190,6 +190,7 @@ pipeline {
 		ECR_REPO_URL      = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
         IMAGE_NAME        = "${ECR_REPO_NAME}:${env.BUILD_NUMBER}"
         IMAGE_NAME_LATEST = "${ECR_REPO_NAME}:latest"
+		ECR_IMAGE         = 
 	   
        
     }
@@ -259,9 +260,9 @@ pipeline {
 					  docker stop my-web-app || true
 					  docker rm my-web-app || true
 					 
-					  docker pull ${ECR_REPO_URL}"/"${IMAGE_NAME_LATEST}
+					  sh 'docker pull ${ECR_REPO_URL}/${IMAGE_NAME_LATEST}'
 					  
-					  docker run -d -p 80:9090 --name my-web-app ${ECR_REPO_URL}"/"${IMAGE_NAME_LATEST}
+					  sh 'docker run -d -p 80:9090 --name my-web-app ${ECR_REPO_URL}/${IMAGE_NAME_LATEST}'
 				}
 			 }
           }
