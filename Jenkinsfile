@@ -117,7 +117,7 @@ pipeline {
 	stages {
         stage('1. Display Path') {
             steps {
-                sh "node --version"              
+                sh "nodejs --version"              
             }
         }
 	}
