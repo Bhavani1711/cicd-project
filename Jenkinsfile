@@ -115,7 +115,7 @@ pipeline {
 	agent{
 	  docker{
 	       image 'node:24.11.1-alpine3.22'
-		   args '-v $WORKSPACE/.npm:/.npm''
+		   args '-v $WORKSPACE/.npm:/.npm'
 	  }
 	}
 	
