@@ -189,10 +189,7 @@ pipeline {
         registryCreds = 'ecr:ap-south-1:awscreds'
 		ECR_REPO_URL      = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
         IMAGE_NAME        = "${ECR_REPO_NAME}:${env.BUILD_NUMBER}"
-        IMAGE_NAME_LATEST = "${ECR_REPO_NAME}:latest"
-		ECR_IMAGE         = 
-	   
-       
+        IMAGE_NAME_LATEST = "${ECR_REPO_NAME}:latest"      
     }
 	
     stages {	   
@@ -257,8 +254,8 @@ pipeline {
 					withAWS(credentials: 'awscreds', region: "${region}") {
 					  aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO_URL}
 					  
-					  docker stop my-web-app || true
-					  docker rm my-web-app || true
+					  sh'docker stop my-web-app || true'
+					  sh'docker rm my-web-app || true'
 					 
 					  sh 'docker pull ${ECR_REPO_URL}/${IMAGE_NAME_LATEST}'
 					  
