@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
     environment {
         AWS_ACCOUNT_ID="904233105350"
         AWS_DEFAULT_REGION="ap-south-1"
@@ -15,9 +15,8 @@ pipeline {
 		SSH_CREDENTIALS_ID = 'ec2-ssh-key'
 	}
    
-    stages {
-        
-         stage('Logging into AWS ECR') {
+    stages {        
+         stage('1.Logging into AWS ECR') {
             steps {
                 script {
                 sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
@@ -26,23 +25,21 @@ pipeline {
             }
         }
         
-        stage('Cloning Git') {
+        stage('2.Cloning Git') {
             steps {
                 checkout scmGit(branches: [[name: '*/feature']], extensions: [], userRemoteConfigs: [[credentialsId: 'Gitcreds', url: 'https://github.com/Bhavani1711/cicd-project.git']])     
             }
-        }
-  
-    // Building Docker images
-    stage('Building image') {
+        }  
+    
+    stage('3.Building image') {
       steps{
         script {
           dockerImage = docker.build "${IMAGE_REPO_NAME}:${IMAGE_TAG}"
         }
       }
-    }
-   
-    // Uploading Docker images into AWS ECR
-    stage('Pushing to ECR') {
+    }  
+    
+    stage('4.Pushing to ECR') {
      steps{  
          script {
                 sh "docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${ECR_REPO_URL}:$IMAGE_TAG"
@@ -50,7 +47,8 @@ pipeline {
          }
         }
       }
-	stage('Deploy to EC2') {
+	  
+	stage('5.Deploy to EC2') {
       steps {
                 script {
                     // Use SSH credentials from Jenkins
