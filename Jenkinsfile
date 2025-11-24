@@ -187,8 +187,10 @@ pipeline {
         repoUri = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME}"
         repoRegistryUrl = "https://${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
         registryCreds = 'ecr:ap-south-1:awscreds'
-	    IMAGE_NAME        = "${ECR_REPO_NAME}:${env.BUILD_NUMBER}"
+		ECR_REPO_URL      = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+        IMAGE_NAME        = "${ECR_REPO_NAME}:${env.BUILD_NUMBER}"
         IMAGE_NAME_LATEST = "${ECR_REPO_NAME}:latest"
+	   
        
     }
 	
@@ -249,18 +251,20 @@ pipeline {
                 }
             }
             steps {
-                echo "Deploying application to ${TARGET_EC2_IP}..."
-                withAWS(credentials: 'awscreds', region: "${region}") {
-				  aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO_URL}
-				  
-				  docker stop my-web-app || true
-                  docker rm my-web-app || true
-				 
-                  dockerImage.pull("${ECR_REPO_URL}/${IMAGE_NAME_LATEST}")
-                  
-                  dockerImage.run("-d -p 80:9090 --name my-web-app ${ECR_REPO_URL}/${IMAGE_NAME_LATEST}")
+			   script{
+					echo "Deploying application to ${TARGET_EC2_IP}..."
+					withAWS(credentials: 'awscreds', region: "${region}") {
+					  aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO_URL}
+					  
+					  docker stop my-web-app || true
+					  docker rm my-web-app || true
+					 
+					  docker pull ${IMAGE_NAME_LATEST}
+					  
+					  docker run -d -p 80:9090 --name my-web-app ${ECR_REPO_URL}/${IMAGE_NAME_LATEST}
 				}
-            }
+			 }
+          }
         }		 
        
     }
