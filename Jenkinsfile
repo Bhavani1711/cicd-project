@@ -256,9 +256,9 @@ pipeline {
 				  docker stop my-web-app || true
                   docker rm my-web-app || true
 				 
-                  docker pull ${ECR_REPO_URL}/${IMAGE_NAME_LATEST}
+                  dockerImage.pull("${ECR_REPO_URL}/${IMAGE_NAME_LATEST}")
                   
-                  docker run -d -p 80:9090 --name my-web-app ${ECR_REPO_URL}/${IMAGE_NAME_LATEST}
+                  dockerImage.run("-d -p 80:9090 --name my-web-app ${ECR_REPO_URL}/${IMAGE_NAME_LATEST}")
 				}
             }
         }		 
