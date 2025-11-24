@@ -255,10 +255,9 @@ pipeline {
 				  
 				  docker stop my-web-app || true
                   docker rm my-web-app || true
-				  # Pull the new 'latest' image from ECR
+				 
                   docker pull ${ECR_REPO_URL}/${IMAGE_NAME_LATEST}
-
-                  # Run the new container, mapping port 80 (public) to 8080 (app)
+                  
                   docker run -d -p 80:9090 --name my-web-app ${ECR_REPO_URL}/${IMAGE_NAME_LATEST}
 				}
             }
