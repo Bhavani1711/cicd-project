@@ -42,6 +42,7 @@
         }
 
         stage('4. Build Docker Image') {
+		    
             steps {
                 echo "Building Docker image: ${IMAGE_NAME}"
                 sh "docker build -t ${IMAGE_NAME} ."
@@ -154,6 +155,12 @@ pipeline {
             }
         }
 		stage('3. Build Docker Image') {
+		    agent {
+                docker {
+                    image 'docker:latest'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'  // Mount Docker socket
+                }
+            }
             steps {
                 echo "Building Docker image: ${IMAGE_NAME}"
                 sh "docker build -t ${IMAGE_NAME} ."
