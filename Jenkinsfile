@@ -124,7 +124,7 @@ pipeline {
         stage('2. Build Application') {		    
             steps {
                 sh '''
-                     set -x  # Print each command
+                     #set -x  # Print each command
                      export npm_config_cache="${WORKSPACE}/.npm-cache"
                      npm config list
                      npm install --verbose --loglevel=silly 2>&1 | tee npm-install.log
