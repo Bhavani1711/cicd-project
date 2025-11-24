@@ -114,10 +114,19 @@
         }
     }
 }*/
+
 pipeline {
-agent any
+    agent any
 	environment {
-	NODE_HOME = tool 'NodeJS' // Name of NodeJS installation
-	PATH = "${NODE_HOME}/bin:${env.PATH}"
+		NODE_HOME = tool 'NodeJS' // Name of NodeJS installation
+		PATH = "${NODE_HOME}/bin:${env.PATH}"
+		
+	}
+	stages {
+        stage('1. Display Path') {
+            steps {
+                echo $PATH                
+            }
+        }
 	}
 }
