@@ -132,5 +132,11 @@ pipeline {
                  '''
             }
         }
+		stage('3. Run Tests') {
+            steps {
+                echo 'Running tests...'
+                sh 'npm test'
+            }
+        }
 	}
 }
