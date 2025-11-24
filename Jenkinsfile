@@ -163,10 +163,12 @@ pipeline {
                     args '-v /var/run/docker.sock:/var/run/docker.sock'  // Mount Docker socket
                 }
             }
-            steps {
-                echo "Building Docker image: ${IMAGE_NAME}"
-				sh 'mkdir -p /tmp/.docker'  
-				dockerImage = docker.build(repoUri + ":$IMAGE_NAME")
+            steps {                
+				script {
+                    echo 'Building Docker Image from Dockerfile...'
+                    sh 'mkdir -p /tmp/.docker'  // Ensure the directory exists
+                    dockerImage = docker.build(repoUri + ":$IMAGE_NAME")
+                }
             }
         }
 	}
