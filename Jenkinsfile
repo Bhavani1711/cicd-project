@@ -86,7 +86,7 @@ pipeline {
                                 fi
                                 
                                 # ECR Login
-                                \$AWS_CLI ecr get-login-password --region ${AWS_REGION} | \
+                                \$AWS_CLI ecr get-login-password --region ${AWS_DEFAULT_REGION} | \
                                     docker login --username AWS --password-stdin ${ECR_REPO_URL}
                                 
                                 echo "========================================="
