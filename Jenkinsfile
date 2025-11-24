@@ -48,7 +48,7 @@ pipeline {
         }
       }
 	  
-	stage('5.Deploy to EC2') {
+	stage('5. Pull ECR image and Deploy to EC2 ') {
       steps {
                 script {
                     // Use SSH credentials from Jenkins
