@@ -118,7 +118,7 @@
 pipeline {
     agent any
 	environment {
-		NODE_HOME = tool 'node' // Name of NodeJS installation
+		NODE_HOME = tool 'NodeJS' // Name of NodeJS installation
 		PATH = "${NODE_HOME}/bin:${env.PATH}"
 		
 	}
