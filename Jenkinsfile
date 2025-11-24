@@ -178,8 +178,7 @@ pipeline {
     agent any  // No global agent, each stage will define its own
 	
     environment {
-        DOCKER_CONFIG = '/tmp/.docker'  // Set to a directory with write access
-		AWS_ACCOUNT_ID    = "904233105350"
+        DOCKER_CONFIG = '/tmp/.docker'  // Set to a directory with write access		
 		AWS_ACCOUNT_ID    = "904233105350"       // Find this in your AWS console
         AWS_REGION        = "ap-south-1"                 // The region for your ECR/EC2
         ECR_REPO_NAME     = "asb/dockerized-my-app"                // The ECR repo name you will create
