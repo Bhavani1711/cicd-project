@@ -242,28 +242,25 @@ pipeline {
         } 
          
          stage('6. Deploy to EC2') {
+		    agent {
+                docker {
+                    image 'docker:latest'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'  // Mount Docker socket
+                }
+            }
             steps {
                 echo "Deploying application to ${TARGET_EC2_IP}..."
-                // 'target-ec2-ssh' is the Credential ID we will create in Jenkins
-                sshagent(credentials: ['target-ec2-ssh']) {
-                    sh """
-                        ssh -o StrictHostKeyChecking=no ${TARGET_EC2_USER}@${TARGET_EC2_IP} '
+                withAWS(credentials: 'awscreds', region: "${region}") {
+				  aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO_URL}
+				  
+				  docker stop my-web-app || true
+                  docker rm my-web-app || true
+				  # Pull the new 'latest' image from ECR
+                  docker pull ${ECR_REPO_URL}/${IMAGE_NAME_LATEST}
 
-                            # Log in to ECR on the target machine (uses its own IAM Role)
-                            aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO_URL}
-
-                            # Stop and remove the old container, if it exists
-                            docker stop dockerized-my-app || true
-                            docker rm dockerized-my-app || true
-
-                            # Pull the new 'latest' image from ECR
-                            docker pull ${ECR_REPO_URL}/${IMAGE_NAME_LATEST}
-
-                            # Run the new container, mapping port 80 (public) to 8080 (app)
-                            docker run -d -p 80:9090 --name dockerized-my-app ${ECR_REPO_URL}/${IMAGE_NAME_LATEST}
-                        '
-                    """
-                }
+                  # Run the new container, mapping port 80 (public) to 8080 (app)
+                  docker run -d -p 80:9090 --name my-web-app ${ECR_REPO_URL}/${IMAGE_NAME_LATEST}
+				}
             }
         }		 
        
