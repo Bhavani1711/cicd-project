@@ -12,6 +12,9 @@ pipeline {
 		CONTAINER_NAME = 'my-web-app'
         HOST_PORT = '80'
         CONTAINER_PORT = '9090'
+		EC2_HOST = '15.206.224.9'  // Your EC2 private/public IP
+        EC2_USER = 'ubuntu'  
+		SSH_CREDENTIALS_ID = 'ec2-ssh-key'
 	}
    
     stages {
