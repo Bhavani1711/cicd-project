@@ -27,12 +27,7 @@
 		
 
         stage('2. Build Application') {
-		    agent {
-                docker {
-                     image 'node:6-alpine'
-                     args '-p 3000:3000'
-                }
-            }
+		    
             steps {
                 echo 'Installing Node.js dependencies...'
                 sh 'npm install'
@@ -116,15 +111,13 @@
 }*/
 
 pipeline {
-    agent any
-	tools{
-	  nodejs
-	}
+    agent none
+	
 	
 	stages {
         stage('1. Display Path') {
             steps {
-                echo "${env.PATH}"              
+                sh "node --version"              
             }
         }
 	}
